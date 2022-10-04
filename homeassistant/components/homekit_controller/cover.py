@@ -205,6 +205,8 @@ class HomeKitWindowCover(HomeKitEntity, CoverEntity):
             tilt_position = self.service.value(
                 CharacteristicsTypes.HORIZONTAL_TILT_CURRENT
             )
+        # recalculate to convert from -90 - 0 scale to 0 - 100 scale
+        tilt_position = int(tilt_position / -0.9)
         return tilt_position
 
     async def async_stop_cover(self, **kwargs: Any) -> None:
@@ -229,6 +231,8 @@ class HomeKitWindowCover(HomeKitEntity, CoverEntity):
     async def async_set_cover_tilt_position(self, **kwargs: Any) -> None:
         """Move the cover tilt to a specific position."""
         tilt_position = kwargs[ATTR_TILT_POSITION]
+        # recalculate to convert from 0 - 100 scale to -90 - 0 scale
+        tilt_position = int(tilt_position * - 0.9)
         if self.is_vertical_tilt:
             await self.async_put_characteristics(
                 {CharacteristicsTypes.VERTICAL_TILT_TARGET: tilt_position}
