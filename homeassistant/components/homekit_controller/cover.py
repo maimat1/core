@@ -1,12 +1,12 @@
 """Support for Homekit covers."""
 from __future__ import annotations
-
+import logging
 from typing import Any
 
 from aiohomekit.model.characteristics import CharacteristicsTypes
 from aiohomekit.model.services import Service, ServicesTypes
 
-from homeassistant.components.cover import (
+from .my_cover import (
     ATTR_POSITION,
     ATTR_TILT_POSITION,
     CoverDeviceClass,
@@ -233,6 +233,21 @@ class HomeKitWindowCover(HomeKitEntity, CoverEntity):
         tilt_position = kwargs[ATTR_TILT_POSITION]
         # recalculate to convert from 0 - 100 scale to -90 - 0 scale
         tilt_position = int(tilt_position * - 0.9)
+
+        position = kwargs.get(ATTR_POSITION)
+        logging.warning(f'Postion is: {position}')
+        if position:
+            if self.is_vertical_tilt:
+                await self.async_put_characteristics(
+                    {CharacteristicsTypes.VERTICAL_TILT_TARGET: tilt_position,
+                    CharacteristicsTypes.POSITION_TARGET: position
+                    }
+                )
+            elif self.is_horizontal_tilt:
+                await self.async_put_characteristics(
+                    {CharacteristicsTypes.HORIZONTAL_TILT_TARGET: tilt_position,
+                    CharacteristicsTypes.POSITION_TARGET: position}
+                )
         if self.is_vertical_tilt:
             await self.async_put_characteristics(
                 {CharacteristicsTypes.VERTICAL_TILT_TARGET: tilt_position}
@@ -241,6 +256,30 @@ class HomeKitWindowCover(HomeKitEntity, CoverEntity):
             await self.async_put_characteristics(
                 {CharacteristicsTypes.HORIZONTAL_TILT_TARGET: tilt_position}
             )
+
+    async def async_set_cover_tilt_position_and_cover_position(self, **kwargs: Any) -> None:
+        """Move the cover tilt to a specific position."""
+        tilt_position = kwargs[ATTR_TILT_POSITION]
+        position = kwargs[ATTR_POSITION]
+        logging.warning(f'Method async_set_cover_tilt_position_and_cover_position got called. Args: {kwargs}.')
+        logging.warning(f'position: {position}, tilt_position: {tilt_position}')
+        # recalculate to convert from 0 - 100 scale to -90 - 0 scale
+        tilt_position = int(tilt_position * - 0.9)
+        if self.is_vertical_tilt:
+            await self.async_put_characteristics(
+                {CharacteristicsTypes.POSITION_TARGET: position, 
+                 CharacteristicsTypes.VERTICAL_TILT_TARGET: tilt_position,
+                }
+            )
+            logging.warning('Case 1')
+        elif self.is_horizontal_tilt:
+            await self.async_put_characteristics(
+                {CharacteristicsTypes.POSITION_TARGET: position,})
+            await self.async_put_characteristics(
+                {CharacteristicsTypes.HORIZONTAL_TILT_TARGET: tilt_position,
+                }
+            )
+            logging.warning('Case 2')
 
     @property
     def extra_state_attributes(self) -> dict[str, Any]:

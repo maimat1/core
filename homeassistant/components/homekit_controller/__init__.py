@@ -23,7 +23,7 @@ from .config_flow import normalize_hkid
 from .connection import HKDevice
 from .const import KNOWN_DEVICES, TRIGGERS
 from .utils import async_get_controller
-
+from .my_cover import async_setup_entry as async_setup_entry_my_cover
 _LOGGER = logging.getLogger(__name__)
 
 

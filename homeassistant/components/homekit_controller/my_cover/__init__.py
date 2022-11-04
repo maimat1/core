@@ -130,77 +130,73 @@ def is_closed(hass: HomeAssistant, entity_id: str) -> bool:
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     """Track states and offer events for covers."""
-    try:
-        component = hass.data[DOMAIN] = EntityComponent(
-            _LOGGER, DOMAIN, hass, SCAN_INTERVAL
-        )
-    except Exception as e:
-        logging.error(f'Problem: {type(e).__name__}: {e}. type(hass.data): {type(hass.data)}, type(EntityComponent): {type(EntityComponent)}')
-        raise
-
-    await component.async_setup(config)
-
-    component.async_register_entity_service(
-        SERVICE_OPEN_COVER, {}, "async_open_cover", [CoverEntityFeature.OPEN]
+    component = hass.data[DOMAIN] = EntityComponent[CoverEntity](
+        _LOGGER, DOMAIN, hass, SCAN_INTERVAL
     )
 
-    component.async_register_entity_service(
-        SERVICE_CLOSE_COVER, {}, "async_close_cover", [CoverEntityFeature.CLOSE]
-    )
+    # await component.async_setup(config)
 
-    component.async_register_entity_service(
-        SERVICE_SET_COVER_POSITION,
-        {
-            vol.Required(ATTR_POSITION): vol.All(
-                vol.Coerce(int), vol.Range(min=0, max=100)
-            )
-        },
-        "async_set_cover_position",
-        [CoverEntityFeature.SET_POSITION],
-    )
+    # component.async_register_entity_service(
+    #     SERVICE_OPEN_COVER, {}, "async_open_cover", [CoverEntityFeature.OPEN]
+    # )
 
-    component.async_register_entity_service(
-        SERVICE_STOP_COVER, {}, "async_stop_cover", [CoverEntityFeature.STOP]
-    )
+    # component.async_register_entity_service(
+    #     SERVICE_CLOSE_COVER, {}, "async_close_cover", [CoverEntityFeature.CLOSE]
+    # )
 
-    component.async_register_entity_service(
-        SERVICE_TOGGLE,
-        {},
-        "async_toggle",
-        [CoverEntityFeature.OPEN | CoverEntityFeature.CLOSE],
-    )
+    # component.async_register_entity_service(
+    #     SERVICE_SET_COVER_POSITION,
+    #     {
+    #         vol.Required(ATTR_POSITION): vol.All(
+    #             vol.Coerce(int), vol.Range(min=0, max=100)
+    #         )
+    #     },
+    #     "async_set_cover_position",
+    #     [CoverEntityFeature.SET_POSITION],
+    # )
 
-    component.async_register_entity_service(
-        SERVICE_OPEN_COVER_TILT,
-        {},
-        "async_open_cover_tilt",
-        [CoverEntityFeature.OPEN_TILT],
-    )
+    # component.async_register_entity_service(
+    #     SERVICE_STOP_COVER, {}, "async_stop_cover", [CoverEntityFeature.STOP]
+    # )
 
-    component.async_register_entity_service(
-        SERVICE_CLOSE_COVER_TILT,
-        {},
-        "async_close_cover_tilt",
-        [CoverEntityFeature.CLOSE_TILT],
-    )
+    # component.async_register_entity_service(
+    #     SERVICE_TOGGLE,
+    #     {},
+    #     "async_toggle",
+    #     [CoverEntityFeature.OPEN | CoverEntityFeature.CLOSE],
+    # )
 
-    component.async_register_entity_service(
-        SERVICE_STOP_COVER_TILT,
-        {},
-        "async_stop_cover_tilt",
-        [CoverEntityFeature.STOP_TILT],
-    )
+    # component.async_register_entity_service(
+    #     SERVICE_OPEN_COVER_TILT,
+    #     {},
+    #     "async_open_cover_tilt",
+    #     [CoverEntityFeature.OPEN_TILT],
+    # )
 
-    component.async_register_entity_service(
-        SERVICE_SET_COVER_TILT_POSITION,
-        {
-            vol.Required(ATTR_TILT_POSITION): vol.All(
-                vol.Coerce(int), vol.Range(min=0, max=100)
-            )
-        },
-        "async_set_cover_tilt_position",
-        [CoverEntityFeature.SET_TILT_POSITION],
-    )
+    # component.async_register_entity_service(
+    #     SERVICE_CLOSE_COVER_TILT,
+    #     {},
+    #     "async_close_cover_tilt",
+    #     [CoverEntityFeature.CLOSE_TILT],
+    # )
+
+    # component.async_register_entity_service(
+    #     SERVICE_STOP_COVER_TILT,
+    #     {},
+    #     "async_stop_cover_tilt",
+    #     [CoverEntityFeature.STOP_TILT],
+    # )
+
+    # component.async_register_entity_service(
+    #     SERVICE_SET_COVER_TILT_POSITION,
+    #     {
+    #         vol.Required(ATTR_TILT_POSITION): vol.All(
+    #             vol.Coerce(int), vol.Range(min=0, max=100)
+    #         )
+    #     },
+    #     "async_set_cover_tilt_position",
+    #     [CoverEntityFeature.SET_TILT_POSITION],
+    # )
 
     component.async_register_entity_service(
         SERVICE_SET_TILT_POSITION_AND_POSITION,
@@ -213,15 +209,15 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
             )
         },
         "async_set_cover_tilt_position_and_cover_position",
-        [CoverEntityFeature.SET_TILT_POSITION, CoverEntityFeature.SET_POSITION],
+        [CoverEntityFeature.SET_TILT_POSITION_AND_POSITION],
     )
 
-    component.async_register_entity_service(
-        SERVICE_TOGGLE_COVER_TILT,
-        {},
-        "async_toggle_tilt",
-        [CoverEntityFeature.OPEN_TILT | CoverEntityFeature.CLOSE_TILT],
-    )
+    # component.async_register_entity_service(
+    #     SERVICE_TOGGLE_COVER_TILT,
+    #     {},
+    #     "async_toggle_tilt",
+    #     [CoverEntityFeature.OPEN_TILT | CoverEntityFeature.CLOSE_TILT],
+    # )
 
     return True
 

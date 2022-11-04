@@ -1,6 +1,5 @@
 {
   "domain": "cover",
-  "version": "0.0.0.1",
   "name": "Cover",
   "documentation": "https://www.home-assistant.io/integrations/cover",
   "codeowners": ["@home-assistant/core"],

@@ -89,31 +89,3 @@ stop_cover_tilt:
   target:
     entity:
       domain: cover
-
-# Describes the format for available cover services
-
-tilt_position_and_position:
-  name: Set tilt and position at the same time
-  description: Move to specific position all or specified cover tilt.
-  target:
-    entity:
-      domain: cover
-  fields:
-    tilt_position:
-      name: Tilt position
-      description: Tilt position of the cover.
-      required: true
-      selector:
-        number:
-          min: 0
-          max: 100
-          unit_of_measurement: "%"
-    position:
-      name: Position
-      description: Position of the cover
-      required: true
-      selector:
-        number:
-          min: 0
-          max: 100
-          unit_of_measurement: "%"
